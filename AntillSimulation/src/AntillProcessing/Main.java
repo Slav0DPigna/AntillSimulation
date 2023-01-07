@@ -7,12 +7,14 @@ import java.util.ArrayList;
 public class Main extends PApplet {
     protected Ant[] ants=new Ant[1];
     protected ArrayList<Food> foods=new ArrayList<>();
+    int num;
 
 
     @Override
     public void setup() {
         for(int i=0;i<1;i++)
             ants[i]=new Ant();
+        num=0;
         frameRate(120);
     }//setup
 
@@ -41,9 +43,11 @@ public class Main extends PApplet {
         if(key=='r')
             for(int i=0;i<ants.length;i++)
                 ants[i].goBack();
-        else
+        else {
             for (int i = 0; i < ants.length; i++)
-                ants[i].move();
+                ants[i].move(num);
+            num++;
+        }
         redraw();
     }
 

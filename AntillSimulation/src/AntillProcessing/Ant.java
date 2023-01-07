@@ -27,25 +27,25 @@ public class Ant {
         return pos.getY();
     }//getY
 
-    public void move(){
-        int x=pos.getX();
-        int y = pos.getY();
-        int randomX=new Random().nextInt(-5,6);
-        int randomY=new Random().nextInt(-5,6);
-        Position park=new Position(x+randomX,y+randomY);
-        randomX=new Random().nextInt(-5,6);
-        randomY=new Random().nextInt(-5,6);
-        while (x + randomX >= 1280)
-            randomX = new Random().nextInt(-11, 0);
-        while (x + randomX <= 0)
-            randomX = new Random().nextInt(0, 11);
-        while (y + randomY >= 720)
-            randomY = new Random().nextInt(-11, 0);
-        while (y + randomY <= 0)
-            randomY = new Random().nextInt(0, 11);
-        park=new Position(x+randomX,y+randomY);
-        this.pos=new Position(park);
-        positions.push(pos);
+    public void move(int num){
+        if(num%5==0) {
+            int x = pos.getX();
+            int y = pos.getY();
+            int randomX = new Random().nextInt(-5, 7);
+            int randomY = new Random().nextInt(-5, 7);
+            Position park = new Position(x + randomX, y + randomY);
+            while (x + randomX >= 1280)
+                randomX = new Random().nextInt(-12, 0);
+            while (x + randomX <= 0)
+                randomX = new Random().nextInt(0, 12);
+            while (y + randomY >= 720)
+                randomY = new Random().nextInt(-12, 0);
+            while (y + randomY <= 0)
+                randomY = new Random().nextInt(0, 12);
+            park = new Position(x + randomX, y + randomY);
+            this.pos = new Position(park);
+            positions.push(pos);
+        }
     }//move
 
     public void goBack() {
