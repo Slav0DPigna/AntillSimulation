@@ -5,14 +5,14 @@ import processing.core.PApplet;
 import java.util.ArrayList;
 
 public class Main extends PApplet {
-    protected Ant[] ants=new Ant[1];
+    protected Ant[] ants=new Ant[50];
     protected ArrayList<Food> foods=new ArrayList<>();
     int num;
 
 
     @Override
     public void setup() {
-        for(int i=0;i<1;i++)
+        for(int i=0;i<50;i++)
             ants[i]=new Ant();
         num=0;
         frameRate(120);
@@ -42,12 +42,11 @@ public class Main extends PApplet {
         }
         if(key=='r')
             for(int i=0;i<ants.length;i++)
-                ants[i].goBack();
-        else {
+                ants[i].goBack(num);
+        else
             for (int i = 0; i < ants.length; i++)
                 ants[i].move(num);
             num++;
-        }
         redraw();
     }
 

@@ -48,8 +48,8 @@ public class Ant {
         }
     }//move
 
-    public void goBack() {
-        if(positions.size()>0) {
+    public void goBack(int num) {
+        if(positions.size()>0 && num%5==0) {
             this.pos = new Position(positions.pop());
             System.out.println(this);
         }
