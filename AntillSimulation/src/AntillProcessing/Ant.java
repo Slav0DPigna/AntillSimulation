@@ -1,17 +1,16 @@
 package AntillProcessing;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Random;
+import java.util.*;
 
 public class Ant {
 
     private Position pos;
     private LinkedList<Position> positions=new LinkedList<>();
+    private boolean carica;
     public Ant(int x,int y){
         pos=new Position(x,y);
         positions.add(pos);
+        carica=false;
     }//Builder
 
     public Ant(){
@@ -48,12 +47,29 @@ public class Ant {
         }
     }//move
 
-    public void goBack(int num) {
+    public boolean goBack(int num) {
         if(positions.size()>0 && num%5==0) {
             this.pos = new Position(positions.pop());
             System.out.println(this);
         }
+        return this.pos.equals(new Position(1280/2,360));
+    }//goBack
+
+    public void setCarica(boolean value){
+        this.carica=value;
     }
+
+    public int foodFound(ArrayList<Food> foods){
+        int r=-1;
+        for(int i=0;i<foods.size();i++){
+            double distanzaPuntoPunto=((Math.sqrt(Math.pow((foods.get(i).getPos().getX()-this.pos.x),2)+(Math.pow(foods.get(i).getPos().getY()-this.pos.y,2))))/2);
+            if(foods.get(i).getExtension()>=distanzaPuntoPunto) {
+                r = i;
+                return r;
+            }
+        }
+        return r;
+    }//foodFound
 
     public int hashCode(){
         int r=13;
