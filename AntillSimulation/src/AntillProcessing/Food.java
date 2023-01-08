@@ -19,7 +19,7 @@ public class Food {
 
     public void decr(){
         if(extension>0)
-            extension--;
+            extension=extension-10;
     }
 
     public String toString(){

@@ -30,9 +30,8 @@ public class Ant {
         if(num%5==0) {
             int x = pos.getX();
             int y = pos.getY();
-            int randomX = new Random().nextInt(-5, 7);
-            int randomY = new Random().nextInt(-5, 7);
-            Position park = new Position(x + randomX, y + randomY);
+            int randomX = new Random().nextInt(-6, 7) + num % 5;
+            int randomY = new Random().nextInt(-6, 7) + num % 5;
             while (x + randomX >= 1280)
                 randomX = new Random().nextInt(-12, 0);
             while (x + randomX <= 0)
@@ -41,28 +40,34 @@ public class Ant {
                 randomY = new Random().nextInt(-12, 0);
             while (y + randomY <= 0)
                 randomY = new Random().nextInt(0, 12);
-            park = new Position(x + randomX, y + randomY);
+            Position park = new Position(x + randomX, y + randomY);
             this.pos = new Position(park);
             positions.push(pos);
         }
     }//move
 
-    public boolean goBack(int num) {
-        if(positions.size()>0 && num%5==0) {
+    public void goBack(int num) {
+        if(positions.size()>0 && num%11==0) {
             this.pos = new Position(positions.pop());
             System.out.println(this);
+            if (this.pos.equals(new Position(640, 360))) {
+                carica = false;
+            }
         }
-        return this.pos.equals(new Position(1280/2,360));
     }//goBack
 
     public void setCarica(boolean value){
         this.carica=value;
     }
 
+    public boolean isCarica() {
+        return carica;
+    }
+
     public int foodFound(ArrayList<Food> foods){
         int r=-1;
         for(int i=0;i<foods.size();i++){
-            double distanzaPuntoPunto=((Math.sqrt(Math.pow((foods.get(i).getPos().getX()-this.pos.x),2)+(Math.pow(foods.get(i).getPos().getY()-this.pos.y,2))))/2);
+            double distanzaPuntoPunto=((Math.sqrt(Math.pow((foods.get(i).getPos().getX()-this.pos.x),2)+(Math.pow(foods.get(i).getPos().getY()-this.pos.y,2))))/2);//raggio cibo
             if(foods.get(i).getExtension()>=distanzaPuntoPunto) {
                 r = i;
                 return r;
