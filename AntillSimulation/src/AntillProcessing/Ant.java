@@ -5,7 +5,7 @@ import java.util.*;
 public class Ant {
 
     private Position pos;
-    private LinkedList<Position> positions=new LinkedList<>();
+    public LinkedList<Position> positions=new LinkedList<>();
     private boolean carica;
     public Ant(int x,int y){
         pos=new Position(x,y);
@@ -27,32 +27,46 @@ public class Ant {
     }//getY
 
     public void move(int num){
-        if(num%5==0) {
-            int x = pos.getX();
-            int y = pos.getY();
-            int randomX = new Random().nextInt(-6, 7) + num % 5;
-            int randomY = new Random().nextInt(-6, 7) + num % 5;
+        int x = pos.getX();
+        int y = pos.getY();
+        if(new Random().nextBoolean()) {
+            int randomX = new Random().nextInt(-1, 2);
+            int randomY = new Random().nextInt(-1, 2);
             while (x + randomX >= 1280)
-                randomX = new Random().nextInt(-12, 0);
+                randomX = new Random().nextInt(-4, 0);
             while (x + randomX <= 0)
-                randomX = new Random().nextInt(0, 12);
+                randomX = new Random().nextInt(0, 4);
             while (y + randomY >= 720)
-                randomY = new Random().nextInt(-12, 0);
+                randomY = new Random().nextInt(-4, 0);
             while (y + randomY <= 0)
-                randomY = new Random().nextInt(0, 12);
+                randomY = new Random().nextInt(0, 4);
             Position park = new Position(x + randomX, y + randomY);
             this.pos = new Position(park);
-            positions.push(pos);
+            if (num % 5 == 0)
+                positions.push(pos);
+        }else{
+            int randomX=0;
+            int randomY=0;
+            boolean bRandomX=new Random().nextBoolean();
+            boolean bRandomY=new Random().nextBoolean();
+            if(bRandomX && pos.x+1<1280 )
+                randomX = 1;
+            if(!bRandomX && pos.x-1>0)
+                randomX=-1;
+            if(bRandomY && pos.y+1<720)
+                randomY=1;
+            if(!bRandomY && pos.y-1>0)
+                randomY=-1;
+            this.pos=new Position(pos.x+randomX,pos.y+randomY);
         }
     }//move
 
     public void goBack(int num) {
-        if(positions.size()>0 && num%11==0) {
+        if(positions.size()>0) {
             this.pos = new Position(positions.pop());
             System.out.println(this);
-            if (this.pos.equals(new Position(640, 360))) {
+            if ((Math.sqrt(Math.pow(((1280)/2-this.pos.x),2)+(Math.pow(360-this.pos.y,2)))<=25))
                 carica = false;
-            }
         }
     }//goBack
 
@@ -67,8 +81,8 @@ public class Ant {
     public int foodFound(ArrayList<Food> foods){
         int r=-1;
         for(int i=0;i<foods.size();i++){
-            double distanzaPuntoPunto=((Math.sqrt(Math.pow((foods.get(i).getPos().getX()-this.pos.x),2)+(Math.pow(foods.get(i).getPos().getY()-this.pos.y,2))))/2);//raggio cibo
-            if(foods.get(i).getExtension()>=distanzaPuntoPunto) {
+            double distanzaPuntoPunto=(Math.sqrt(Math.pow((foods.get(i).getPos().getX()-this.pos.x),2)+(Math.pow(foods.get(i).getPos().getY()-this.pos.y,2))));//raggio cibo
+            if((foods.get(i).getExtension()/2)>=distanzaPuntoPunto) {
                 r = i;
                 return r;
             }
