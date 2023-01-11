@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class Main extends PApplet {
-    protected Ant[] ants=new Ant[100];
-    protected ArrayList<Food> foods=new ArrayList<>();
+
+    protected Antill antill;
     protected int num;
     protected boolean visibile, aggiungi;
 
@@ -16,8 +16,7 @@ public class Main extends PApplet {
 
     @Override
     public void setup() {
-        for(int i=0;i<ants.length;i++)
-            ants[i]=new Ant();
+        antill=new Antill(100);
         num=0;
         visibile=false;
         aggiungi=false;
@@ -31,66 +30,41 @@ public class Main extends PApplet {
 
     public void settings(){
         size(1280,720);
-
+        smooth();
     }
 
     @Override
     public void draw() {
         background(255,255,255);
-        fill(0,255,255);
+        fill(150,75,0);
         circle(640,360,50);
-        if(key=='n') {
-            aggiungi = true;
+        if(antill.getFoods().size()>0)
+            for(int i=0;i<antill.getFoods().size();i++) {
+                if(antill.getFoods().get(i).getExtension()<=0)
+                    antill.removeFood(i);
+                else {
+                    fill(0, 255, 0);
+                    int extension = antill.getFoods().get(i).getExtension();
+                    circle(antill.getFoods().get(i).getPos().x, antill.getFoods().get(i).getPos().y, extension);
+                }
+            }
+        if(key=='a') {
+            antill.addFood();
             key=' ';
         }
-        if (aggiungi) {
-            int randomX=new Random().nextInt(0,1280);
-            int randomY=new Random().nextInt(0,720);
-            while(randomX>615 && randomX<665)
-                randomX=new Random().nextInt(0,1280);
-            while(randomY>335 && randomY<385)
-                randomY=new Random().nextInt(0,720);
-            foods.add(new Food(new Position(randomX, randomY), 50));
-            for(int i=0;i<foods.size();i++)
-                println(foods.get(i));
-            aggiungi=false;
-            println("--------------");
-        }
-        if(key=='t') {
-            visibile = true;
-            key=' ';
-        }
-        if(key=='h')
-            visibile=false;
-        if(visibile)
-            for(int i=0;i<ants.length;i++)
-                if(!ants[i].isCarica())
-                    disegnaTraccia(ants[i]);
-        for (int i = 0; i < foods.size(); i++) {
-            fill(255, 255, 0);
-            circle(foods.get(i).getPos().getX(), foods.get(i).getPos().getY(), foods.get(i).getExtension());
-        }
-        for (int i = 0; i < ants.length; i++) {
-            fill(255, 0, 0);
-            circle(ants[i].getX(), ants[i].getY(), 10);
-        }
-        for (int i = 0; i < ants.length; i++) {
-            if(ants[i].isCarica())
-                ants[i].goBack(num);
-            else
-                ants[i].move(num);
-        }
-        for(int i=0;i<ants.length;i++) {
-            int indexFood=ants[i].foodFound(foods);
-            if (indexFood!=-1 && !ants[i].isCarica()) {
-                foods.get(indexFood).decr();
-                ants[i].setCarica(true);
-                ants[i].goBack(num);
+        if(key=='t')
+            for(int i=0;i<antill.getAnts().length;i++)
+                disegnaTraccia(antill.getAnts()[i]);
+        for(int i=0;i<antill.getAnts().length;i++) {
+            if(antill.getAnts()[i].isCarica()){
+                fill(0,0,255);
+                circle(antill.getAnts()[i].getX(),antill.getAnts()[i].getY(),10);
+            }else {
+                fill(255,0,0);
+                circle(antill.getAnts()[i].getX(),antill.getAnts()[i].getY(),10);
             }
         }
-        num++;
-        if(num==5)
-            num=0;
+        antill.moveAnts();
         redraw();
     }
 /*

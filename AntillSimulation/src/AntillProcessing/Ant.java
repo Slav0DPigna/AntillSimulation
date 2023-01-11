@@ -6,16 +6,29 @@ public class Ant {
 
     private Position pos;
     public LinkedList<Position> positions=new LinkedList<>();
+    private ArrayList<Food> foodArrayList;
+
+    private Random r=new Random();
+    private int myFood;
     private boolean carica;
-    public Ant(int x,int y){
+    public Ant(int x,int y,ArrayList<Food> foodList){
         pos=new Position(x,y);
-        positions.add(pos);
+        if(foodList.size()!=0)
+            myFood=r.nextInt(0,foodList.size());
+        else
+            myFood=-1;
+        foodArrayList=foodList;
         carica=false;
     }//Builder
 
-    public Ant(){
-        pos=new Position(1280/2,360);
-        positions.add(pos);
+    public Ant(ArrayList<Food> foodList){
+        pos=new Position(640,360);
+        foodArrayList=foodList;
+        if(foodList.size()>0)
+            myFood=new Random().nextInt(0,foodList.size());
+        else
+            myFood=-1;
+        carica=false;
     }
 
     public int getX() {
@@ -26,46 +39,39 @@ public class Ant {
         return pos.getY();
     }//getY
 
-    public void move(int num){
-        int x = pos.getX();
-        int y = pos.getY();
-        if(new Random().nextBoolean()) {
-            int randomX = new Random().nextInt(-1, 2);
-            int randomY = new Random().nextInt(-1, 2);
+    public void move(){
+        if (this.myFood!= -1) {
+            int x = pos.getX();
+            int y = pos.getY();
+            Random r = new Random();
+            int randomY = r.nextInt(-2, 3);
+            int randomX = r.nextInt(-2, 3);
             while (x + randomX >= 1280)
-                randomX = new Random().nextInt(-4, 0);
+                randomX = r.nextInt(-2, 0);
             while (x + randomX <= 0)
-                randomX = new Random().nextInt(0, 4);
+                randomX = r.nextInt(0, 3);
             while (y + randomY >= 720)
-                randomY = new Random().nextInt(-4, 0);
+                randomY = r.nextInt(-2, 0);
             while (y + randomY <= 0)
-                randomY = new Random().nextInt(0, 4);
-            Position park = new Position(x + randomX, y + randomY);
-            this.pos = new Position(park);
-            if (num % 5 == 0)
+                randomY = r.nextInt(0, 3);
+            this.pos = new Position(x + randomX, y + randomY);
+            if (((Math.sqrt(Math.pow((640 - this.pos.x), 2) + (Math.pow(360 - this.pos.y, 2))) >= 25)))
                 positions.push(pos);
-        }else{
-            int randomX=0;
-            int randomY=0;
-            boolean bRandomX=new Random().nextBoolean();
-            boolean bRandomY=new Random().nextBoolean();
-            if(bRandomX && pos.x+1<1280 )
-                randomX = 1;
-            if(!bRandomX && pos.x-1>0)
-                randomX=-1;
-            if(bRandomY && pos.y+1<720)
-                randomY=1;
-            if(!bRandomY && pos.y-1>0)
-                randomY=-1;
-            this.pos=new Position(pos.x+randomX,pos.y+randomY);
-        }
+            for(int i=0;i<foodArrayList.size();i++)
+                if(!this.carica && (Math.sqrt(Math.pow(foodArrayList.get(i).getPos().x-this.pos.x,2)+(Math.pow(foodArrayList.get(i).getPos().y-this.pos.y,2)))<=25)) {
+                    foodArrayList.get(i).decr();
+                    this.carica=true;
+            }
+        }else
+            if(foodArrayList.size()>0)
+                this.myFood=r.nextInt(0,foodArrayList.size());
+
     }//move
 
-    public void goBack(int num) {
-        if(positions.size()>0) {
+    public void goBack() {
+        if(positions.size()>0 ) {
             this.pos = new Position(positions.pop());
-            System.out.println(this);
-            if ((Math.sqrt(Math.pow(((1280)/2-this.pos.x),2)+(Math.pow(360-this.pos.y,2)))<=25))
+            if ((Math.sqrt(Math.pow(((1280)/2-this.pos.x),2)+(Math.pow(360-this.pos.y,2)))<=30))
                 carica = false;
         }
     }//goBack
@@ -97,7 +103,11 @@ public class Ant {
     }//hashCode
 
     public String toString(){
-        String r="La formica si trova ne punto x = "+getX()+" , "+" y = "+getY();
+        String r="";
+        if(foodArrayList.size()>0)
+            r="La formica si trova ne punto x = "+getX()+" , "+" y = "+getY()+" il mio cibo è "+foodArrayList.get(myFood).toString();
+        else
+            r="La formica si trova ne punto x = "+getX()+" , "+" y = "+getY()+" non ho cibo da trovare";
         return r;
     }//toString
 }//Ant
